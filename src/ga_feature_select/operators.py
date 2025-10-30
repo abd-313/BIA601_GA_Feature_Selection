@@ -74,5 +74,3 @@ def mutation(chromosome: np.ndarray, mutation_rate: float = 0.01) -> np.ndarray:
         mutated[flip_mask] = 1 - mutated[flip_mask]
 
     return mutated
-
-print(crossover([1, 0, 1], [0, 1, 0], 0.8))
