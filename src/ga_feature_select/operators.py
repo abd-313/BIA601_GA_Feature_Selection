@@ -1,3 +1,5 @@
+# src/ga_feature_select/operators.py
+
 """
 Operators for Genetic Algorithm-based Feature Selection.
 
@@ -5,14 +7,14 @@ This module implements:
 - Uniform crossover (recommended for binary feature masks)
 - Bit-flip mutation with configurable rate
 
-All operators assume chromosomes are 1D NumPy arrays of dtype bool or int (0/1),
-with length equal to the total number of features (e.g., 561 in the HAR dataset).
+All operators assume chromosomes are 1D NumPy arrays of dtype bool or int (0/1).
 """
 
 import numpy as np
 import random
+from typing import Tuple, Union, Any
 
-def crossover(parent1: np.ndarray, parent2: np.ndarray, crossover_rate: float = 0.8) -> tuple[np.ndarray, np.ndarray]:
+def crossover(parent1: np.ndarray, parent2: np.ndarray, crossover_rate: float = 0.8) -> Tuple[np.ndarray, np.ndarray]:
     """
     Perform uniform crossover between two parent chromosomes with a given probability.
 
@@ -55,7 +57,7 @@ def mutation(chromosome: np.ndarray, mutation_rate: float = 0.01) -> np.ndarray:
     chromosome : np.ndarray
         Binary or boolean feature selection mask.
     mutation_rate : float
-        Probability of flipping each bit (default: 0.02).
+        Probability of flipping each bit (default: 0.01).
 
     Returns
     -------
