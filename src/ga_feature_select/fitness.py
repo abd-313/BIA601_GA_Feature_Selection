@@ -56,10 +56,17 @@ def calculate_fitness(
     X_train_selected = X_train.iloc[:, selected_indices] if hasattr(X_train, 'iloc') else X_train[:, selected_indices]
     X_test_selected = X_test.iloc[:, selected_indices] if hasattr(X_test, 'iloc') else X_test[:, selected_indices]
     
-    # Train a simple classifier (Logistic Regression)
-    model = LogisticRegression(max_iter=500, solver='liblinear', random_state=42)
+# Train a simple classifier (Logistic Regression)
+    # FIX: Use 'lbfgs' solver (better for multi-class with many features) 
+    # and increase max_iter for convergence stability on 562 features.
+    model = LogisticRegression(
+        max_iter=1500,          # Increased iterations for high-dim data
+        solver='lbfgs',         # Faster and better for multi-class problems
+        random_state=42,
+        multi_class='auto',     # Handles multi-class automatically
+        n_jobs=-1
+    )
     model.fit(X_train_selected, y_train)
-
     # Evaluate performance (Accuracy on Test Set)
     y_pred = model.predict(X_test_selected)
     accuracy = accuracy_score(y_test, y_pred)

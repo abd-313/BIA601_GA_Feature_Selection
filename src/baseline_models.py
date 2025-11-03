@@ -21,16 +21,22 @@ def train_and_evaluate_model(
     y_test: pd.Series,
     random_state: int = 42
 ) -> Tuple[Dict[str, float], Any]:
-    """
-    Trains a specified classification model and evaluates its performance on the test set.
-    """
+    """Trains a specified classification model and evaluates its performance."""
     
     # 1. Initialize the Model
     if model_name == 'LogisticRegression':
-        model = LogisticRegression(max_iter=500, solver='liblinear', random_state=random_state)
+        # OPTIMIZATION: High-performance settings for server efficiency
+        model = LogisticRegression(
+            max_iter=1500, 
+            solver='lbfgs', 
+            random_state=random_state, 
+            multi_class='auto',
+            n_jobs=-1 # Utilize all cores
+        )
     elif model_name == 'DecisionTree':
         model = DecisionTreeClassifier(random_state=random_state)
     elif model_name == 'RandomForest':
+        # n_jobs=-1 is included here for multi-core processing
         model = RandomForestClassifier(n_estimators=100, random_state=random_state, n_jobs=-1)
     else:
         raise ValueError(f"Unknown model name: {model_name}. Choose from LogisticRegression, DecisionTree, RandomForest.")
@@ -57,20 +63,23 @@ def run_baseline_comparison(
     y_train: pd.Series,
     X_test: pd.DataFrame,
     y_test: pd.Series,
-    models_to_run: List[str] = None
+    models_to_run: List[str] = None,
+    verbose: bool = True # Flag to control console output
 ) -> Dict[str, Dict[str, float]]:
-    """
-    Runs a comparison across multiple baseline models using all available features.
-    """
+    """Runs a comparison across multiple baseline models using all available features."""
+
     if models_to_run is None:
         models_to_run = ['LogisticRegression', 'DecisionTree', 'RandomForest']
     
     all_baseline_results = {}
-    print("\n--- Starting Baseline Model Comparison (Using ALL features) ---")
+    
+    if verbose: # Conditional print
+        print("\n--- Starting Baseline Model Comparison (Using ALL features) ---")
 
     # Iterate through the selected models
     for model_name in models_to_run:
-        print(f"-> Training {model_name}...")
+        if verbose: # Conditional print
+            print(f"-> Training {model_name}...")
         
         # Train and evaluate using ALL features
         metrics, _ = train_and_evaluate_model(
@@ -79,6 +88,7 @@ def run_baseline_comparison(
         
         all_baseline_results[model_name] = metrics
         
-        print(f"   {model_name} Accuracy: {metrics['accuracy']:.4f}")
+        if verbose: # Conditional print
+            print(f"   {model_name} Accuracy: {metrics['accuracy']:.4f}")
 
     return all_baseline_results

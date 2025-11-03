@@ -25,7 +25,7 @@ def prepare_data(
     if isinstance(source, pd.DataFrame):
         df = source.copy()
     else:
-        df = pd.read_csv("source")
+        df = pd.read_csv(source)
 
     # --- decide target column ---
     if target is None:
