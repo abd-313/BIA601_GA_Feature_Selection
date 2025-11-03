@@ -40,3 +40,8 @@ env/
 
 # JetBrains/PyCharm project files (uncomment to ignore)
 # .idea/
+
+# Project Outputs and Results
+results/
+temp_plots/
+data/preprocessor.joblib
