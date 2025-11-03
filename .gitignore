@@ -36,7 +36,17 @@ env/
 
 ### 4. IDE and Editor Files ###
 # Visual Studio Code local settings (uncomment to ignore)
-# .vscode/
+.vscode/
 
 # JetBrains/PyCharm project files (uncomment to ignore)
 # .idea/
+
+# ... (Other existing rules)
+
+### 5. Project Specific Outputs and Logs ###
+# Ignore preprocessor saved file
+data/preprocessor.joblib
+
+# Ignore GA results and plots folder
+temp_plots/
+results/
