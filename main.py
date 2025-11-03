@@ -4,8 +4,10 @@ import pandas as pd
 import numpy as np
 import os
 import warnings
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 from pathlib import Path
+from joblib import dump, load  # ADDED: for saving the final model/mask
+from sklearn.linear_model import LogisticRegression # ADDED: for final model training/saving
 
 # Project Imports
 from src.data_preprocessing import prepare_data 
@@ -15,6 +17,10 @@ from src.ga_feature_select.fitness import calculate_fitness
 
 # Define project root once
 PROJECT_ROOT = Path(__file__).parent
+
+# NEW PATHS: Define paths for the final persistent outputs for Django
+BEST_MODEL_PATH = os.path.join(PROJECT_ROOT, 'data', 'best_ga_model.joblib')
+FEATURE_MASK_PATH = os.path.join(PROJECT_ROOT, 'data', 'best_feature_mask.joblib')
 
 
 def run_ga_analysis(data_source: str, ga_params: Dict[str, Any]) -> Dict[str, Any]:
@@ -50,11 +56,21 @@ def run_ga_analysis(data_source: str, ga_params: Dict[str, Any]) -> Dict[str, An
     # 3. Final GA Results and Scoring
     n_selected = np.sum(best_mask)
 
-    # Calculate accuracy of the best model
+    # Calculate accuracy of the best model (using best_mask)
     _, raw_accuracy = calculate_fitness(
         best_mask, X_train_df, y_train, X_test_df, y_test, 
         ALPHA=1.0, PENALTY_WEIGHT=0.0 # Pure accuracy calculation
     )
+    
+    # NEW STEP: Train the final Logistic Regression model using only the selected features
+    # This model will be saved for Django to load instantly.
+    final_model = LogisticRegression(solver='lbfgs', n_jobs=-1, random_state=42)
+    X_train_best = X_train_df.loc[:, best_mask.astype(bool)] # FIXED: Ensure mask is boolean
+    
+    # Suppress warnings during training 
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        final_model.fit(X_train_best, y_train) 
     
     # 4. Run Baseline Models
     baseline_results = run_baseline_comparison(
@@ -81,7 +97,9 @@ def run_ga_analysis(data_source: str, ga_params: Dict[str, Any]) -> Dict[str, An
         'n_features_selected': int(n_selected),
         'lr_baseline_accuracy': baseline_results['LogisticRegression']['accuracy'],
         'baseline_results_markdown': baseline_markdown,
-        'plot_path': os.path.join(GA_SAVE_PATH, "fitness_evolution.png")
+        'plot_path': os.path.join(GA_SAVE_PATH, "fitness_evolution.png"),
+        'best_mask': best_mask, # ADDED: return the best mask
+        'best_model': final_model, # ADDED: return the final trained model
     }
     
     return results
@@ -108,6 +126,27 @@ if __name__ == "__main__":
     final_results = run_ga_analysis(DATA_PATH, DEFAULT_GA_PARAMS)
     
     if not final_results.get('error'):
+        # Extract results for saving
+        best_mask = final_results['best_mask']
+        best_model = final_results['best_model']
+        
+        # Save the final outputs for Django deployment
+        try:
+            # Save the feature mask
+            dump(best_mask, FEATURE_MASK_PATH)
+            
+            # Save the best trained model
+            dump(best_model, BEST_MODEL_PATH)
+            
+            print(f"\n======================================")
+            print(f"   FINAL OUTPUTS SAVED FOR DJANGO:")
+            print(f"   Feature Mask saved to: {FEATURE_MASK_PATH}")
+            print(f"   Best GA Model saved to: {BEST_MODEL_PATH}")
+            print(f"======================================\n")
+            
+        except Exception as e:
+            print(f"   Error saving final results: {e}")
+            
         print("\n--- Final Project Summary ---")
         print(f"GA Model Accuracy: {final_results['ga_model_accuracy']:.4f}")
         print(f"Features Selected: {final_results['n_features_selected']} / {final_results['total_features']}")
