@@ -3,14 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Analysis Upload</title>
+    <title>Dynamic GA Upload</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div style="text-align: left; padding: 20px;">
-        <h1>Start Dynamic Analysis (Long-running Job)</h1>
-        <p>This page is ready for the data submission form based on the selected source (CSV/Repo/DB Link).</p>
-        <p>Backend: The `upload_dynamic_view` in `analysis/views.py` is ready to receive the request and queue the job.</p>
-        <p><a href="/">Return to Home Page</a></p>
+<body class="min-h-screen flex flex-col items-center p-8">
+
+    <div class="w-full max-w-lg mb-8">
+        <a href="{% url 'home_view' %}" class="btn-link flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            Back to Analysis Menu
+        </a>
     </div>
+    
+    <div class="panel-card p-8 w-full max-w-lg border-t-4 border-solid border-emerald-500">
+        <h1 class="text-3xl font-bold" style="color: var(--text-color); margin-bottom: 0.5rem; text-align: center;">
+            Custom Data Optimization
+        </h1>
+        <p class="text-gray-500 mb-6 text-center">
+            Configure and start a new Genetic Algorithm job for your custom dataset. This process may take 15-20 minutes.
+        </p>
+
+        <form id="dynamic-form" action="" method="POST" enctype="multipart/form-data" style="margin-top: 1.5rem;">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label for="data_file" class="block text-sm font-medium text-gray-700 mb-2">Select CSV File for Analysis</label>
+                <input type="file" name="data_file" id="data_file" accept=".csv" required 
+                       class="input-field cursor-pointer"
+                       style="line-height: 1.5rem;">
+                <p class="mt-1 text-xs text-gray-500">Required format: CSV. File must be cleaned and pre-processed.</p>
+            </div>
+
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-bottom: 1.5rem;">
+                <label for="target_column" class="block text-sm font-medium text-gray-700 mb-2">Target Variable (Column Name)</label>
+                <input type="text" name="target_column" id="target_column" placeholder="e.g., 'Activity' or 'Class'" required 
+                       class="input-field">
+                <p class="mt-1 text-xs text-gray-500">The column containing the labels your model should predict.</p>
+            </div>
+
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-bottom: 2rem;">
+                <label for="model_choice" class="block text-sm font-medium text-gray-700 mb-2">Machine Learning Model</label>
+                <select name="model_choice" id="model_choice" class="input-field">
+                    <option value="LogisticRegression" selected>Logistic Regression (Default)</option>
+                    <option value="SVC">Support Vector Classifier (SVC)</option>
+                    <option value="RandomForest">Random Forest</option>
+                </select>
+            </div>
+
+            <button type="submit" class="action-button btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v10.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 15 16.5V12a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V6.75a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 0 0-1.5z" />
+                </svg>
+                Start Full GA Analysis
+            </button>
+        </form>
+    </div>
+
+    <script src="{% static 'js/app.js' %}"></script>
+
 </body>
 </html>

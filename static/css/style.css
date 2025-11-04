@@ -1,0 +1,127 @@
+/* File: style.css */
+
+:root {
+    --primary-color: #1E40AF; /* Blue-800 for main accents */
+    --secondary-color: #3B82F6; /* Blue-500 for buttons/highlights */
+    --background-color: #f8fafc; /* Slate-50 background */
+    --text-color: #1f2937; /* Gray-900 text */
+    --border-radius: 0.75rem; /* Rounded corners for academic look */
+    --shadow-heavy: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Global Container Styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+/* --- Card and Panel Styles --- */
+.panel-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.panel-card:hover {
+    box-shadow: var(--shadow-heavy);
+}
+
+/* Header and Typography */
+.header-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: -0.025em;
+}
+.subtitle {
+    font-size: 1.125rem;
+    color: #4b5563; /* Gray-600 */
+    margin-top: 0.5rem;
+}
+
+/* --- Button Styles --- */
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary Button (for Static Analysis) */
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #2563EB; /* Blue-600 */
+    transform: translateY(-1px);
+}
+
+/* Secondary Button (for Dynamic Upload) */
+.btn-secondary {
+    background-color: #10B981; /* Emerald-500 */
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #059669; /* Emerald-600 */
+    transform: translateY(-1px);
+}
+
+/* Tertiary/Link Button */
+.btn-link {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+.btn-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* --- Form and Input Styles --- */
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db; /* Gray-300 */
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input-field:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    outline: none;
+}
+
+/* Status Panel Styling */
+.status-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+.status-label {
+    font-size: 0.875rem;
+    color: #6b7280; /* Gray-500 */
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .header-title {
+        font-size: 3rem;
+    }
+}
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
