@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dynamic title block -->
+    <title>{% block title %}GA Feature Selection Project{% endblock %}</title>
+    
+    <!-- Load Tailwind CSS via CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a cleaner UI, applying the Inter font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f8; /* Light gray background */
+        }
+        /* Style for primary content panels */
+        .panel-card {
+            background-color: white;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Style for primary action buttons */
+        .btn-primary {
+            @apply bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50;
+        }
+        /* Style for secondary/link buttons */
+        .btn-link {
+            @apply text-emerald-600 hover:text-emerald-700 font-medium;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-8">
+    <!-- Main Header (Simple and centered) -->
+    <header class="w-full max-w-4xl py-4 mb-8">
+        <h1 class="text-4xl font-extrabold text-center text-gray-800">
+            BIA601 - Genetic Algorithm Feature Selection
+        </h1>
+        <nav class="mt-4 flex justify-center space-x-4">
+            <!-- Navigation link back to home view -->
+            <a href="{% url 'analysis:home_view' %}" class="btn-link">Home</a>
+            <!-- Could add more navigation links here -->
+        </nav>
+    </header>
+
+    <!-- Main Content Block - This is where child templates place their unique content -->
+    <main class="w-full max-w-4xl flex-grow">
+        <div class="p-4 sm:p-6">
+            {% block content %}
+                <!-- Default content if child template does not override -->
+                <p class="text-center text-gray-500">Welcome to the application.</p>
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-4xl py-4 mt-8 border-t border-gray-300 text-center text-sm text-gray-500">
+        &copy; 2024 BIA601 Project. All Rights Reserved.
+    </footer>
+</body>
+</html>

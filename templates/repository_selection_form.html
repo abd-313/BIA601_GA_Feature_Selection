@@ -1,0 +1,41 @@
+{% load widget_tweaks %}
+
+<div class="space-y-4">
+    <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-lg">
+        <p class="font-semibold text-sm">Repository Data Selection</p>
+        <p class="text-xs mt-1">Select a dataset from the pre-configured repository to begin the optimization job.</p>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.repository_dataset.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            Select Dataset <span class="text-red-500">*</span>
+        </label>
+        {% render_field form.repository_dataset class="input-field" %}
+        <p class="text-xs text-gray-500 mt-1">Choose one of the available datasets from the pre-loaded repository.</p>
+        {% for error in form.repository_dataset.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.target_column.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            Target Column Name <span class="text-red-500">*</span>
+        </label>
+        {% render_field form.target_column class="input-field" placeholder="e.g., status" %}
+        <p class="text-xs text-gray-500 mt-1">The name of the column you want to predict.</p>
+        {% for error in form.target_column.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.model_choice.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            Machine Learning Model <span class="text-red-500">*</span>
+        </label>
+        {% render_field form.model_choice class="input-field" %}
+        <p class="text-xs text-gray-500 mt-1">The base classifier used within the Genetic Algorithm optimization loop.</p>
+        {% for error in form.model_choice.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+</div>

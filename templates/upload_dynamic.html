@@ -1,16 +1,64 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic GA Upload</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{{ title }}</title> <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define variables for colors used in the template (assuming a base style) */
+        :root {
+            --primary-color: #059669; /* Emerald 600 */
+            --secondary-color: #FBBF24; /* Amber 400 */
+            --text-color: #1F2937; /* Gray 800 */
+        }
+        .panel-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-link {
+            color: #6B7280; /* Gray 500 */
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .btn-link:hover {
+            color: var(--primary-color); /* Hover color for better feedback */
+        }
+        .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            text-align: center;
+            width: 100%; /* Make it full width for this page */
+        }
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+        .btn-secondary:hover {
+            background-color: #FCD34D; /* Lighter amber */
+            box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.5);
+        }
+        .input-field {
+             @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-150;
+        }
+        .form-group select {
+             @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-150;
+        }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-8">
+<body class="min-h-screen flex flex-col items-center p-8 bg-gray-50 font-sans">
 
     <div class="w-full max-w-lg mb-8">
-        <a href="{% url 'home_view' %}" class="btn-link flex items-center">
+        <a href="{% url 'analysis:home_view' %}" class="btn-link flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
             </svg>
@@ -20,49 +68,61 @@
     
     <div class="panel-card p-8 w-full max-w-lg border-t-4 border-solid border-emerald-500">
         <h1 class="text-3xl font-bold" style="color: var(--text-color); margin-bottom: 0.5rem; text-align: center;">
-            Custom Data Optimization
+            {{ title }}
         </h1>
+        
         <p class="text-gray-500 mb-6 text-center">
-            Configure and start a new Genetic Algorithm job for your custom dataset. This process may take 15-20 minutes.
+            Configure and start a new Genetic Algorithm job for your custom data (Source: {{ source_type }}).
         </p>
 
-        <form id="dynamic-form" action="" method="POST" enctype="multipart/form-data" style="margin-top: 1.5rem;">
-            {% csrf_token %}
-            
-            <div style="margin-bottom: 1.5rem;">
-                <label for="data_file" class="block text-sm font-medium text-gray-700 mb-2">Select CSV File for Analysis</label>
-                <input type="file" name="data_file" id="data_file" accept=".csv" required 
-                       class="input-field cursor-pointer"
-                       style="line-height: 1.5rem;">
-                <p class="mt-1 text-xs text-gray-500">Required format: CSV. File must be cleaned and pre-processed.</p>
-            </div>
+        {% if form %}
 
-            <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-bottom: 1.5rem;">
-                <label for="target_column" class="block text-sm font-medium text-gray-700 mb-2">Target Variable (Column Name)</label>
-                <input type="text" name="target_column" id="target_column" placeholder="e.g., 'Activity' or 'Class'" required 
-                       class="input-field">
-                <p class="mt-1 text-xs text-gray-500">The column containing the labels your model should predict.</p>
-            </div>
+            <form id="dynamic-form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
 
-            <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-bottom: 2rem;">
-                <label for="model_choice" class="block text-sm font-medium text-gray-700 mb-2">Machine Learning Model</label>
-                <select name="model_choice" id="model_choice" class="input-field">
-                    <option value="LogisticRegression" selected>Logistic Regression (Default)</option>
-                    <option value="SVC">Support Vector Classifier (SVC)</option>
-                    <option value="RandomForest">Random Forest</option>
-                </select>
-            </div>
+                {% if error %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                        <strong class="font-bold">Error!</strong>
+                        <span class="block sm:inline">{{ error }}</span>
+                    </div>
+                {% endif %}
 
-            <button type="submit" class="action-button btn-secondary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v10.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 15 16.5V12a.75.75 0 0 0-1.5 0v4.5a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V6.75a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 0 0-1.5z" />
-                </svg>
-                Start Full GA Analysis
-            </button>
-        </form>
+                {% if source_type == 'upload_csv' %}
+                    {% include 'upload_csv_form.html' %}
+                {% elif source_type == 'database' %}
+                    {% include 'database_link_form.html' %}
+                {% elif source_type == 'repository' %}
+                    {% include 'repository_selection_form.html' %}
+                {% else %}
+                     <div class="text-center p-6 bg-red-50 border border-red-400 text-red-700 rounded-lg border-dashed">
+                        <p class="font-bold text-lg mb-2">Configuration Error</p>
+                        <p class="text-gray-700">Invalid data source specified or source template missing.</p>
+                    </div>
+                {% endif %}
+                
+                <div class="mt-6">
+                    <button type="submit" class="action-button btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                        </svg>
+                        Start GA Optimization
+                    </button>
+                </div>
+            </form>
+            {% else %}
+            <div class="text-center p-6 bg-red-50 border border-red-400 text-red-700 rounded-lg border-dashed">
+                <p class="font-bold text-lg mb-2">Form Context Missing</p>
+                <p class="text-gray-700">The dynamic form could not be loaded. Please check the view logic.</p>
+                 <a href="{% url 'analysis:home_view' %}" class="btn-link block mt-4 text-sm">
+                    Return to Analysis Menu
+                </a>
+            </div>
+        {% endif %}
+
     </div>
 
-    <script src="{% static 'js/app.js' %}"></script>
+    <div id="status-message" style="display: none;" class="mt-8 w-full max-w-lg"></div>
 
+    <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'analysis', # Custom application for our analysis logic
+    'widget_tweaks', # Added to enable easy styling of form fields
 ]
 
 MIDDLEWARE = [
@@ -45,7 +46,8 @@ ROOT_URLCONF = 'bia601_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # Global templates directory
+        # CRITICAL CHANGE: This tells Django to look inside the project's 'templates' folder.
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -57,7 +59,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'bia601_project.wsgi.application'
 
 

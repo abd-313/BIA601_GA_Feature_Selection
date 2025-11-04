@@ -1,0 +1,94 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Analysis Results</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #059669; /* Emerald 600 */
+            --text-color: #1F2937; /* Gray 800 */
+        }
+        .panel-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--primary-color);
+        }
+        .btn-link {
+            color: #6B7280;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .btn-link:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-8 bg-gray-50 font-sans">
+
+    <div class="w-full max-w-4xl mb-8">
+        <a href="{% url 'analysis:home_view' %}" class="btn-link flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            Back to Analysis Menu
+        </a>
+    </div>
+
+    <div class="panel-card p-10 w-full max-w-4xl">
+        <h1 class="text-4xl font-extrabold text-center" style="color: var(--text-color); margin-bottom: 0.5rem;">
+            Repository Analysis Results
+        </h1>
+        <p class="text-gray-500 mb-8 text-center">
+            Detailed view of the Genetic Algorithm optimization process results.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h2 class="text-xl font-bold mb-3 text-emerald-700">Job Status</h2>
+                <p class="text-gray-700">
+                    <span class="font-semibold">Dataset Name:</span> {{ dataset_name|default:"Not Specified" }}
+                </p>
+                <p class="text-gray-700">
+                    <span class="font-semibold">Target Column:</span> {{ target_column|default:"N/A" }}
+                </p>
+                <p class="text-gray-700">
+                    <span class="font-semibold">Current Status:</span> 
+                    <span class="text-yellow-600 font-bold">{{ status|default:"Processing" }}</span>
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md border border-emerald-300">
+                <h2 class="text-xl font-bold mb-3 text-emerald-700">Best Result Achieved</h2>
+                {% if best_score %}
+                    <p class="text-gray-700 text-lg">
+                        <span class="font-bold">Optimization Score:</span> 
+                        <span class="text-4xl font-extrabold text-red-600">{{ best_score|floatformat:4 }}</span>
+                    </p>
+                    <div class="mt-4 space-y-2">
+                        <p class="text-sm text-gray-600">
+                            <span class="font-semibold">Best Parameters (Subset):</span>
+                        </p>
+                        <pre class="bg-gray-100 p-3 rounded-lg text-xs overflow-x-auto">{{ best_params|default:"{...}" }}</pre>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500">Results not yet available. Please refresh the page later.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-10 text-center">
+             <a href="{% url 'analysis:home_view' %}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg transition duration-150 ease-in-out">
+                Finish and Return to Main Menu
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
