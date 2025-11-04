@@ -114,4 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return cookieValue;
     }
 });
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
