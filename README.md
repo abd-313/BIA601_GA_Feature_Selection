@@ -12,7 +12,7 @@
 ## 📘 Overview
 
 This project was developed as part of the **BIA601 – Intelligent Algorithms (Fall 2024)** course.  
-It demonstrates the application of **evolutionary algorithms** in feature selection for machine learning, offering both a **web interface** (Django) and an optional **console mode** for developers.
+It demonstrates the application of **Genetic Algorithms** in feature selection for machine learning, offering both a **web interface** (Django) and an optional **console mode** for developers.
 
 The system allows users to:
 - Upload numeric datasets (`.csv` format)
@@ -134,6 +134,7 @@ Then open your browser at **http://127.0.0.1:8000/**
 
 From there, you can:
 - Upload your numeric dataset (`.csv`)
+- Alternatively, provide a link to the CSV file
 - Specify the **target column name**
 - Run the **Genetic Algorithm**
 - View model comparisons and results visually
@@ -161,9 +162,7 @@ The GA searches for the **optimal subset of features** that balances:
 
 The **fitness function** is defined as:
 
-\[
-\text{Fitness} = (\alpha \times \text{Accuracy}) - (w \times \text{Feature Ratio})
-\]
+`Fitness = (α × Accuracy) - (w × Feature Ratio)`
 
 Where:
 - **α (ALPHA)** = 0.9 → Weight for accuracy  
@@ -217,11 +216,12 @@ Below is an example of the GA's fitness evolution across generations:
 Developed by:
 
 - [Bilal Alasha : https://github.com/Bilal-Alasha]  
-- [Name 2]  
-- [Name 3]  
-- [Name 4]  
-- [Name 5]  
-- [Name 6]  
+- [Abdulrahman Suleiman : https://github.com/abd-313]  
+- [Jalaa alaswad : https://github.com/jaltarala2-sudo]  
+- [Oday : https://github.com/ODAY-43]  
+- [mohamad : https://github.com/mohamadib16587-afk]  
+- [Mhd mahdi alwis : https://github.com/MhdMahdiAlwis ]  
+- [Doha : https://github.com/doha993]
 
 ---
 
