@@ -1,127 +1,607 @@
-/* File: style.css */
+/*
+ * === [ Global Variables & Typography ] ===
+ */
 
+/* Define colors based on the project theme */
 :root {
-    --primary-color: #1E40AF; /* Blue-800 for main accents */
-    --secondary-color: #3B82F6; /* Blue-500 for buttons/highlights */
-    --background-color: #f8fafc; /* Slate-50 background */
-    --text-color: #1f2937; /* Gray-900 text */
-    --border-radius: 0.75rem; /* Rounded corners for academic look */
-    --shadow-heavy: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --primary-color: #059669; /* Emerald 600 */
+    --secondary-color: #FBBF24; /* Amber 400 */
+    --text-color-main: #1F2937; /* Gray 800 */
+    --text-color-sub: #4B5563; /* Gray 600 */
 }
 
-body {
+/* Import Inter font and set body styles */
+/* Import Inter font and set body styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+.app-body { 
     font-family: 'Inter', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    line-height: 1.6;
+    background-color: #f4f6f8; /* Light gray background */
+    min-height: 100vh;
 }
+/* Helper classes */
+.text-gray-800 { color: var(--text-color-main); }
 
-/* Global Container Styling */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.5rem;
-}
 
-/* --- Card and Panel Styles --- */
+/*
+ * === [ Card and Panel Styling ] ===
+ */
+
+/* Style for primary content panels */
 .panel-card {
     background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.panel-card:hover {
-    box-shadow: var(--shadow-heavy);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Header and Typography */
-.header-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--primary-color);
-    letter-spacing: -0.025em;
-}
-.subtitle {
-    font-size: 1.125rem;
-    color: #4b5563; /* Gray-600 */
-    margin-top: 0.5rem;
-}
+/*
+ * === [ Button & Link Styling ] ===
+ */
 
-/* --- Button Styles --- */
-.action-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: var(--border-radius);
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Primary Button (for Static Analysis) */
+/* Primary action button styling */
 .btn-primary {
-    background-color: var(--secondary-color);
+    background-color: #059669;
     color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s ease-in-out; 
 }
 .btn-primary:hover {
-    background-color: #2563EB; /* Blue-600 */
-    transform: translateY(-1px);
+    background-color: #047857; /* Darker emerald */
+}
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.5);
 }
 
-/* Secondary Button (for Dynamic Upload) */
-.btn-secondary {
-    background-color: #10B981; /* Emerald-500 */
-    color: white;
-}
-.btn-secondary:hover {
-    background-color: #059669; /* Emerald-600 */
-    transform: translateY(-1px);
-}
-
-/* Tertiary/Link Button */
+/* Navigation links (like 'Home' link) */
 .btn-link {
-    color: var(--primary-color);
+    color: #059669; 
     font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
 }
 .btn-link:hover {
-    color: var(--secondary-color);
-    text-decoration: underline;
+    color: #047857;
 }
 
-/* --- Form and Input Styles --- */
+/*
+ * === [ Utility Classes from Tailwind Structure ] ===
+ */
+/* Utility for centering content (if needed in base.html) */
+.flex-center { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+/*
+ * === [ Form & Input Field Styles ] ===
+ */
+
+/* Container for each form field (equivalent to space-y-4) */
+.form-group {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Base style for text inputs, textareas, and selects */
 .input-field {
+    /* @apply block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 */
+    display: block;
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #d1d5db; /* Gray-300 */
-    border-radius: 0.5rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    padding: 0.5rem;
+    border: 1px solid #D1D5DB; /* Gray 300 */
+    border-radius: 0.375rem; /* Rounded md */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Shadow sm */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 .input-field:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    border-color: #059669; /* Emerald 500 */
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1); /* Focus ring */
     outline: none;
 }
 
-/* Status Panel Styling */
+/* Styles for informational banner (p-4 bg-blue-50 border-l-4 border-blue-500) */
+.info-banner-blue { 
+    padding: 1rem;
+    background-color: #EFF6FF; /* Blue 50 */
+    border-left: 4px solid #3B82F6; /* Blue 500 */
+    color: #1E40AF; /* Blue 800 */
+    border-radius: 0.5rem;
+}
+
+/*
+ * === [ Home Page Specific Styles ] ===
+ */
+
+/* Styles for the main header text */
+.header-title {
+    /* Mimics: text-4xl font-extrabold color:var(--text-color) */
+    font-size: 2.5rem; 
+    font-weight: 800;
+    color: var(--text-color-main);
+}
+.subtitle {
+    /* Mimics: text-xl mt-2 text-gray-600 */
+    font-size: 1.125rem;
+    color: var(--text-color-sub);
+    margin-top: 1rem;
+}
+
+/* Status values inside the configuration card */
 .status-value {
-    font-size: 1.25rem;
+    /* Mimics: text-2xl font-bold */
+    font-size: 1.5rem;
     font-weight: 700;
 }
 .status-label {
+    /* Mimics: text-xs text-gray-500 */
+    font-size: 0.75rem;
+    color: #6B7280; /* Gray 500 */
+    margin-top: 0.25rem;
+}
+
+/* Specific border style for the configuration card */
+.border-primary-color {
+    border-color: var(--primary-color);
+}
+/* Utility for bottom border */
+.border-b-1 {
+    border-bottom: 1px solid #e5e7eb; /* light gray border */
+}
+
+
+/*
+ * === [ Layouts & Utility Classes ] ===
+ */
+
+/* Grid layout for the three action cards */
+.grid-cols-3 { 
+    display: grid; 
+    grid-template-columns: repeat(3, minmax(0, 1fr)); 
+    gap: 1.5rem; 
+}
+
+/* Grid layout for the four status cards */
+.grid-cols-4-auto {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+/* Helper to center content (used on buttons) */
+.flex-center { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+/* Helper for minimum height on cards to align buttons */
+.min-h-250 { 
+    min-height: 250px; 
+}
+
+/* Card hover effect (optional, but good practice) */
+.card-hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover-effect:hover {
+    transform: translateY(-4px); /* Slight lift */
+    box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+}
+
+/* Action Buttons Specific Classes (Added here for home.html context) */
+/* Secondary action button (Used for CSV Upload) */
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--text-color-main);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s ease-in-out, box-shadow 0.2s;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-secondary:hover {
+    background-color: #FCD34D; /* Lighter amber */
+    box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.5);
+}
+
+/* Specific style for Database Link button (Fuchsia) */
+.btn-secondary-fuchsia {
+    background-color: #EC4899; /* Fuchsia 500 */
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s ease-in-out, box-shadow 0.2s;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-secondary-fuchsia:hover {
+    background-color: #DB2777; /* Darker fuchsia */
+    box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.5);
+}
+
+/*
+ * === [ Result Page Specific Styles ] ===
+ */
+
+/* Specific styling for the plot section border (from repository_results.html) */
+.plot-card-border {
+    border-top: 5px solid var(--secondary-color); /* Matches the original style color */
+}
+
+/* Style for the parameter code block */
+.param-code-block {
+    background-color: #f3f4f6; /* Gray 100 */
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem; /* Text xs */
+    overflow-x: auto;
+}
+
+/* Style for the "Finish and Return to Main Menu" button (btn-finish) */
+.btn-finish {
+    /* Replicates all Tailwind classes from the original button */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem; /* px-6 py-3 */
+    border: 1px solid transparent;
+    font-size: 1rem; /* text-base */
+    font-weight: 500; /* medium */
+    border-radius: 0.375rem; /* rounded-md */
+    color: white;
+    background-color: #059669; /* bg-emerald-600 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-lg */
+    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    text-decoration: none; /* Ensure it looks like a button */
+}
+.btn-finish:hover {
+    background-color: #047857; /* hover:bg-emerald-700 */
+}
+
+/*
+ * === [ Form & Input Field Styles Update ] ===
+ */
+
+/* Styles for informational banner - YELLOW (from repository_selection_form.html) */
+.info-banner-yellow {
+    /* Mimics: p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-lg */
+    padding: 1rem;
+    background-color: #FFFBEB; /* Yellow 50 */
+    border-left: 4px solid #F59E0B; /* Yellow 500 */
+    color: #92400E; /* Yellow 800 */
+    border-radius: 0.5rem;
+}
+
+/*
+ * === [ Form & Input Field Styles Update ] ===
+ */
+
+/* Styles for informational banner - GREEN (from upload_csv_form.html) */
+.info-banner-green {
+    /* Mimics: p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-lg */
+    padding: 1rem;
+    background-color: #F0FDF4; /* Green 50 */
+    border-left: 4px solid #10B981; /* Green 500 */
+    color: #065F46; /* Green 800 */
+    border-radius: 0.5rem;
+}
+
+/* Specific style for file input element (csv_file field) */
+.file-input-style {
+    /* Replicates: block w-full text-sm text-gray-500 */
+    display: block;
+    width: 100%;
+    font-size: 0.875rem; /* text-sm */
+    color: #6B7280; /* text-gray-500 */
+}
+
+/* Custom styling for the actual file button part (Webkit browsers) */
+.file-input-style::-webkit-file-upload-button {
+    /* file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 */
+    margin-right: 1rem; 
+    padding: 0.5rem 1rem; 
+    border-radius: 9999px; 
+    border: 0;
+    font-size: 0.875rem; 
+    font-weight: 600; 
+    background-color: #ECFDF5; /* Emerald 50 */
+    color: #047857; /* Emerald 700 */
+    transition: background-color 0.15s ease-in-out;
+    cursor: pointer;
+}
+/* Standard styling for the actual file button part */
+.file-input-style::file-selector-button { 
+    /* file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 */
+    margin-right: 1rem;
+    padding: 0.5rem 1rem; 
+    border-radius: 9999px;
+    border: 0;
     font-size: 0.875rem;
-    color: #6b7280; /* Gray-500 */
+    font-weight: 600;
+    background-color: #ECFDF5;
+    color: #047857;
+    transition: background-color 0.15s ease-in-out;
+    cursor: pointer;
+}
+/* Hover effect */
+.file-input-style:hover::-webkit-file-upload-button,
+.file-input-style:hover::file-selector-button {
+    background-color: #D1FAE5; /* hover:file:bg-emerald-100 */
 }
 
-/* Responsive adjustments */
-@media (min-width: 768px) {
-    .header-title {
-        font-size: 3rem;
-    }
-}
-<<<<<<< Updated upstream
+/*
+ * === [ Dynamic Upload Page Styles (upload_dynamic.html) ] ===
+ */
 
-=======
->>>>>>> Stashed changes
+/* Style for the tab switching buttons */
+.tab-btn {
+    /* Mimics: px-4 py-2 rounded-full font-medium text-sm transition duration-150 ease-in-out */
+    padding: 0.5rem 1rem; 
+    border-radius: 9999px; /* rounded-full */
+    font-weight: 500;
+    font-size: 0.875rem; /* text-sm */
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border: none;
+    cursor: pointer;
+}
+
+/* Active tab state */
+.active-tab-btn {
+    /* Mimics: bg-emerald-600 text-white shadow-md */
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.4);
+}
+
+/* Inactive tab state */
+.inactive-tab-btn {
+    /* Mimics: bg-gray-100 text-gray-700 hover:bg-gray-200 */
+    background-color: #F3F4F6; /* Gray 100 */
+    color: #4B5563; /* Gray 700 */
+}
+.inactive-tab-btn:hover {
+    background-color: #E5E7EB; /* Gray 200 */
+}
+
+/* Submit Button: Start GA Optimization (btn-start-ga) */
+.btn-start-ga {
+    /* Mimics: action-button btn-secondary (from the original) */
+    background-color: var(--secondary-color);
+    color: var(--text-color-main);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s ease-in-out, box-shadow 0.2s;
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+.btn-start-ga:hover {
+    background-color: #FCD34D; /* Lighter amber */
+    box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.5);
+}
+
+/* Error panel for missing context (Red styling) */
+.error-panel-missing {
+    /* Mimics: text-center p-6 bg-red-50 border border-red-400 text-red-700 rounded-lg border-dashed */
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #FEF2F2; /* Red 50 */
+    border: 1px dashed #F87171; /* Red 400 */
+    color: #B91C1C; /* Red 700 */
+    border-radius: 0.5rem;
+}
+
+/* General Error panel (non-missing context) */
+.error-panel {
+    /* Mimics: p-6 bg-red-50 border border-red-400 text-red-700 rounded-lg */
+    padding: 1.5rem;
+    background-color: #FEF2F2;
+    border: 1px solid #F87171;
+    color: #B91C1C;
+    border-radius: 0.5rem;
+}
+
+/*
+ * === [ Missing Direct Color Utilities ] ===
+ */
+
+/* Direct color definitions used in Status Cards */
+.text-green-500 { color: #10B981; } /* Green color for the 18/56 features */
+.text-amber-600 { color: #D97706; } /* Amber color for the 99.4% GA Optimization */
+
+/* Color helpers */
+.primary-color-text { color: var(--primary-color); }
+.secondary-color-text { color: var(--secondary-color); }
+
+/* Background color for the light gray status boxes */
+.bg-light-gray { background-color: #F3F4F6; }
+
+/*
+ * === [ FINAL MISSING UTILITIES FOR LAYOUT & COLOR ] ===
+ */
+
+/* 1. Layout: Centering and Max Width (Crucial for page structure) */
+.max-w-6xl { max-width: 72rem; } /* Used in repository_results.html */
+.mx-auto { margin-left: auto; margin-right: auto; } /* Used for centering containers */
+
+/* 2. Flexbox Utilities (Needed for card alignment and buttons) */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-grow { flex-grow: 1; } /* Needed on home.html card description */
+.justify-center { justify-content: center; } 
+
+/* 3. Color and Background Helpers (Used widely across templates) */
+.primary-color-text { color: var(--primary-color); }
+.secondary-color-text { color: var(--secondary-color); }
+.text-green-500 { color: #10B981; } /* Status value */
+.text-amber-600 { color: #D97706; } /* Status value */
+.text-red-500 { color: #EF4444; } /* For form error messages */
+.bg-light-gray { background-color: #F3F4F6; } /* Background for status boxes in home.html */
+
+/* Ensure text styles for page titles and subtitles are defined if not already */
+.text-4xl { font-size: 2.25rem; } /* Text size for repository_results title */
+.text-xl { font-size: 1.25rem; }
+.font-extrabold { font-weight: 800; }
+.font-bold { font-weight: 700; }
+
+/*
+ * === [ Utility Classes for Layout (Critical Fix) ] ===
+ */
+
+/* 1. Spacing and Margin (Crucial for space-y-4 and space-x-4) */
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.pb-4 { padding-bottom: 1rem; }
+.mt-4 { margin-top: 1rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mt-6 { margin-top: 1.5rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+
+/* 2. Flexbox Utilities (Needed for card alignment and base.html body) */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-grow { flex-grow: 1; }
+.items-center { align-items: center; } /* For vertical centering */
+.justify-center { justify-content: center; } /* For horizontal centering */
+.justify-end { justify-content: flex-end; } /* Used in forms for submit button */
+
+/* 3. Text and Font Utilities (Size and Weight) */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-base { font-size: 1rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-3xl { font-size: 1.875rem; }
+.text-4xl { font-size: 2.25rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.text-center { text-align: center; }
+
+/* 4. Border and Corner Utilities */
+.rounded-md { border-radius: 0.375rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.border-b { border-bottom-width: 1px; }
+.border-t { border-top-width: 1px; }
+.border-gray-200 { border-color: #E5E7EB; }
+.border-emerald-300 { border-color: #A7F3D0; }
+
+/*
+ * === [ Home Page Custom Styles ] ===
+ */
+
+/* Custom minimum height for the option cards to ensure uniformity */
+.min-h-250 {
+    min-height: 250px;
+}
+
+/* Hover effect for the three main option cards */
+.card-hover-effect {
+    /* Transition for smooth effect */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+.card-hover-effect:hover {
+    /* Moves card up slightly and adds a strong shadow */
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 6px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+/* Custom Header and Subtitle */
+.header-title {
+    /* Replicates text-4xl font-extrabold text-gray-800 */
+    font-size: 2.25rem; /* 3xl/4xl equivalent */
+    font-weight: 800; 
+    color: var(--text-color-main);
+}
+.subtitle {
+    /* Replicates text-lg text-gray-600 mt-2 */
+    color: var(--text-color-sub);
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+}
+
+/* Status Boxes (inside grid-cols-4-auto) */
+.status-value {
+    /* Replicates text-2xl font-bold */
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+.status-label {
+    /* Replicates text-xs text-gray-500 */
+    font-size: 0.75rem;
+    color: #6B7280; /* Gray 500 */
+    font-weight: 500;
+}
+
+/* Database Link Button (Fuchsia) */
+.btn-secondary-fuchsia {
+    /* Replicates bg-fuchsia-500 text-white hover:bg-fuchsia-600 */
+    background-color: #D946EF; /* Fuchsia 500 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    transition: background-color 0.15s ease-in-out;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+.btn-secondary-fuchsia:hover {
+    background-color: #C026D3; /* Fuchsia 600 */
+}
+
+/* Direct border styling used on the main status panel */
+.border-t-4 { border-top-width: 4px; }
+.border-solid { border-style: solid; }
+.border-primary-color { border-color: var(--primary-color); }
+
+/* --- New Styling for Navigation Link (e.g., Home Button) --- */
+
+.btn-nav-home {
+    /* Base styles (replicates btn-link but bolder) */
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600; /* Semi-bold */
+    color: var(--text-color-main); /* Gray 800 */
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border: 1px solid transparent; /* Ensure consistent layout */
+}
+
+.btn-nav-home:hover {
+    color: var(--primary-color); /* Emerald on hover */
+    background-color: #E6FAF4; /* Very light emerald background */
+    border-color: #A7F3D0; /* Light border on hover */
+}
+
+/* Icon styling */
+.btn-nav-home svg {
+    margin-right: 0.5rem; /* Space between icon and text */
+    width: 1.25rem; /* w-5 */
+    height: 1.25rem; /* h-5 */
+}

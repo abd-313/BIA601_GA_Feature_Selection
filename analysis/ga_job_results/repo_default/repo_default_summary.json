@@ -1,0 +1,20 @@
+{
+  "job_id": "repo_default",
+  "status": "Pre-Analyzed (Fixed)",
+  "dataset_name": "Default Repository Data (HAR)",
+  "target_column": "Activity",
+  "ml_model": "Logistic Regression",
+  "ga_model_accuracy": 0.9250,
+  "ga_weighted_fitness": 0.9015,
+  "n_features_selected": 220,
+  "total_features": 561,
+  "ga_params": {
+    "pop_size": 200,
+    "generations": 50,
+    "crossover_rate": 0.8,
+    "mutation_rate": 0.01,
+    "alpha": 0.9,
+    "penalty_weight": 0.1
+  },
+  "baseline_results_markdown": "#### Comparison Table\n\n| Model | Accuracy | Precision (Weighted) | Recall (Weighted) | F1 Score (Weighted) |\n| :--- | :---: | :---: | :---: | :---: |\n| **GA Selected (Best)** | **0.9250** | **0.9255** | **0.9250** | **0.9251** |\n| Logistic Regression (All) | 0.8970 | 0.9011 | 0.8970 | 0.8970 |\n| Decision Tree (All) | 0.8250 | 0.8351 | 0.8250 | 0.8250 |\n| Random Forest (All) | 0.9150 | 0.9153 | 0.9150 | 0.9150 |"
+}

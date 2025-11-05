@@ -1,7 +1,6 @@
 {% load widget_tweaks %}
-
 <div class="space-y-4">
-    <div class="p-4 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-lg">
+    <div class="info-banner-green">
         <p class="font-semibold text-sm">Upload & Configuration</p>
         <p class="text-xs mt-1">Upload your CSV file and specify the target variable and model algorithm to start the analysis.</p>
     </div>
@@ -10,12 +9,7 @@
         <label for="{{ form.csv_file.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
             Select CSV File <span class="text-red-500">*</span>
         </label>
-        {% render_field form.csv_file class="block w-full text-sm text-gray-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-full file:border-0
-            file:text-sm file:font-semibold
-            file:bg-emerald-50 file:text-emerald-700
-            hover:file:bg-emerald-100" %}
+        {% render_field form.csv_file class="file-input-style" %}
         <p class="text-xs text-gray-500 mt-1">Maximum file size: 50MB (.csv format only).</p>
         {% for error in form.csv_file.errors %}
             <p class="text-red-500 text-xs mt-1">{{ error }}</p>
@@ -38,9 +32,15 @@
             Machine Learning Model <span class="text-red-500">*</span>
         </label>
         {% render_field form.model_choice class="input-field" %}
-        <p class="text-xs text-gray-500 mt-1">The base classifier used within the Genetic Algorithm optimization loop.</p>
+        <p class="text-xs text-gray-500 mt-1">Select the classification model for the GA optimization.</p>
         {% for error in form.model_choice.errors %}
             <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+
+    <div style="display: none;">
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
         {% endfor %}
     </div>
 </div>

@@ -1,0 +1,31 @@
+# File: render.yaml
+# Description: Defines the Render Web Service configuration for the Django application.
+
+services:
+  - type: web
+    name: bia601-ga-app # Your service name on Render (you can change it)
+    env: python
+    
+    # Command to execute during the build phase
+    buildCommand: "./build.sh"
+    
+    # Command to start the server in production (using Gunicorn and the project's WSGI file)
+    startCommand: "gunicorn bia601_project.wsgi:application"
+    
+    # Recommended plan for initial setup
+    plan: free 
+    
+    envVars:
+      # Render will automatically generate a secure SECRET_KEY for the application
+      - key: SECRET_KEY
+        generateValue: true
+      
+      # Database URL setup. This variable is crucial for connecting to a Render-hosted Postgres database.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bia601-project-db # Render DB name (ensure you create a Postgres instance first)
+          property: connectionString
+
+      # Setting DEBUG to False in settings.py via environment variable
+      - key: DEBUG
+        value: False

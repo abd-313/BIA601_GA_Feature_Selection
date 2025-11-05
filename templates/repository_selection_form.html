@@ -1,7 +1,6 @@
 {% load widget_tweaks %}
-
 <div class="space-y-4">
-    <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-lg">
+    <div class="info-banner-yellow">
         <p class="font-semibold text-sm">Repository Data Selection</p>
         <p class="text-xs mt-1">Select a dataset from the pre-configured repository to begin the optimization job.</p>
     </div>
@@ -33,9 +32,16 @@
             Machine Learning Model <span class="text-red-500">*</span>
         </label>
         {% render_field form.model_choice class="input-field" %}
-        <p class="text-xs text-gray-500 mt-1">The base classifier used within the Genetic Algorithm optimization loop.</p>
+        <p class="text-xs text-gray-500 mt-1">Select the classification model for the GA optimization.</p>
         {% for error in form.model_choice.errors %}
             <p class="text-red-500 text-xs mt-1">{{ error }}</p>
         {% endfor %}
     </div>
+
+    <div style="display: none;">
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+    </div>
+
 </div>

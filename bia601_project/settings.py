@@ -119,3 +119,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom Path Configuration to allow importing project source code (src)
 # This is crucial for finding and importing the joblib files from the data/ directory.
 sys.path.insert(0, os.path.join(BASE_DIR, '..'))
+
+MEDIA_URL = '/media/ga_jobs/'
+MEDIA_ROOT = BASE_DIR / 'analysis' / 'ga_job_results'

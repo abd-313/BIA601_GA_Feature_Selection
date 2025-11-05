@@ -1,128 +1,76 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title> <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Define variables for colors used in the template (assuming a base style) */
-        :root {
-            --primary-color: #059669; /* Emerald 600 */
-            --secondary-color: #FBBF24; /* Amber 400 */
-            --text-color: #1F2937; /* Gray 800 */
-        }
-        .panel-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .btn-link {
-            color: #6B7280; /* Gray 500 */
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .btn-link:hover {
-            color: var(--primary-color); /* Hover color for better feedback */
-        }
-        .action-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: background-color 0.2s, box-shadow 0.2s;
-            text-decoration: none;
-            text-align: center;
-            width: 100%; /* Make it full width for this page */
-        }
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-        }
-        .btn-secondary:hover {
-            background-color: #FCD34D; /* Lighter amber */
-            box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.5);
-        }
-        .input-field {
-             @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-150;
-        }
-        .form-group select {
-             @apply w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-150;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col items-center p-8 bg-gray-50 font-sans">
 
-    <div class="w-full max-w-lg mb-8">
-        <a href="{% url 'analysis:home_view' %}" class="btn-link flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-            </svg>
-            Back to Analysis Menu
-        </a>
-    </div>
-    
-    <div class="panel-card p-8 w-full max-w-lg border-t-4 border-solid border-emerald-500">
-        <h1 class="text-3xl font-bold" style="color: var(--text-color); margin-bottom: 0.5rem; text-align: center;">
-            {{ title }}
-        </h1>
-        
-        <p class="text-gray-500 mb-6 text-center">
-            Configure and start a new Genetic Algorithm job for your custom data (Source: {{ source_type }}).
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-4 sm:p-6">
+    <header class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">{{ title }}</h1>
+        <p class="text-md text-gray-600 mt-2">
+            Configure your dataset source and model parameters to start the feature selection process.
         </p>
+    </header>
 
-        {% if form %}
+    <div class="panel-card p-6 md:p-8">
+        
+        <div class="mb-6 flex space-x-4 border-b pb-4">
+            <button id="repo_btn" 
+                    class="tab-btn active-tab-btn" 
+                    data-source="repository"
+            >
+                Repository Selection
+            </button>
+            <button id="csv_btn" 
+                    class="tab-btn inactive-tab-btn" 
+                    data-source="upload_csv"
+            >
+                Upload CSV
+            </button>
+            <button id="db_btn" 
+                    class="tab-btn inactive-tab-btn" 
+                    data-source="database"
+            >
+                Database Link
+            </button>
+        </div>
 
-            <form id="dynamic-form" action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+        {% if form %} 
+        <form id="dynamic-form" method="POST" enctype="multipart/form-data" action="{% url 'analysis:submit_dynamic_job' %}">
+            {% csrf_token %}
 
-                {% if error %}
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-                        <strong class="font-bold">Error!</strong>
-                        <span class="block sm:inline">{{ error }}</span>
-                    </div>
-                {% endif %}
+            <input type="hidden" name="source_type" id="source_type" value="{{ source_type }}">
 
-                {% if source_type == 'upload_csv' %}
-                    {% include 'upload_csv_form.html' %}
-                {% elif source_type == 'database' %}
-                    {% include 'database_link_form.html' %}
-                {% elif source_type == 'repository' %}
-                    {% include 'repository_selection_form.html' %}
+            <div id="dynamic-form-container">
+                {% if form_template %}
+                    {% include form_template %}
                 {% else %}
-                     <div class="text-center p-6 bg-red-50 border border-red-400 text-red-700 rounded-lg border-dashed">
+                    <div class="error-panel">
                         <p class="font-bold text-lg mb-2">Configuration Error</p>
                         <p class="text-gray-700">Invalid data source specified or source template missing.</p>
                     </div>
                 {% endif %}
-                
-                <div class="mt-6">
-                    <button type="submit" class="action-button btn-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                        </svg>
-                        Start GA Optimization
-                    </button>
-                </div>
-            </form>
-            {% else %}
-            <div class="text-center p-6 bg-red-50 border border-red-400 text-red-700 rounded-lg border-dashed">
-                <p class="font-bold text-lg mb-2">Form Context Missing</p>
-                <p class="text-gray-700">The dynamic form could not be loaded. Please check the view logic.</p>
-                 <a href="{% url 'analysis:home_view' %}" class="btn-link block mt-4 text-sm">
-                    Return to Analysis Menu
-                </a>
             </div>
+            
+            <div class="mt-6 text-right">
+                <button type="submit" class="btn-start-ga">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                    </svg>
+                    Start GA Optimization
+                </button>
+            </div>
+        </form>
+
+        {% else %}
+        <div class="text-center p-6 error-panel-missing">
+            <p class="font-bold text-lg mb-2">Form Context Missing</p>
+            <p class="text-gray-700">The dynamic form could not be loaded. Please check the view logic and the URL parameters.</p>
+             <a href="{% url 'analysis:home_view' %}" class="btn-link block mt-4">Go to Home Page</a>
+        </div>
         {% endif %}
-
     </div>
+</div>
 
-    <div id="status-message" style="display: none;" class="mt-8 w-full max-w-lg"></div>
-
-    <script src="{% static 'js/app.js' %}"></script>
-</body>
-</html>
+<script src="{% static 'js/app.js' %}"></script>
+{% endblock content %}

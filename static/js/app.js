@@ -1,120 +1,73 @@
-/* app.js */
+// static/js/app.js
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("BIA601 Application Frontend Initialized.");
-
-    const staticForm = document.getElementById('static-form');
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
     const dynamicForm = document.getElementById('dynamic-form');
-    const statusMessage = document.getElementById('status-message');
+    const sourceInput = document.getElementById('source_type');
+    const formContainer = document.getElementById('dynamic-form-container');
 
-    /**
-     * Shows a message in the status area.
-     * @param {string} message - The message text.
-     * @param {string} type - 'success', 'error', or 'info'.
-     */
-    function showStatus(message, type = 'info') {
-        if (!statusMessage) return;
-
-        // Reset classes
-        statusMessage.className = 'mt-4 p-3 rounded-lg font-medium text-center';
-
-        switch (type) {
-            case 'success':
-                statusMessage.classList.add('bg-green-100', 'text-green-800');
-                break;
-            case 'error':
-                statusMessage.classList.add('bg-red-100', 'text-red-800');
-                break;
-            case 'info':
-            default:
-                statusMessage.classList.add('bg-blue-100', 'text-blue-800');
-                break;
+    // Function to handle fetching and swapping form content
+    function loadFormTemplate(source) {
+        // Prevent loading if the source is already active
+        if (sourceInput.value === source) {
+            return;
         }
-        statusMessage.textContent = message;
-        statusMessage.style.display = 'block';
+
+        // 1. Update Hidden Field for Django Backend
+        sourceInput.value = source;
+        
+        // 2. Determine the correct template path to fetch (since we are on upload_dynamic)
+        let templateName = '';
+        if (source === 'repository') {
+            templateName = 'repository_selection_form.html';
+        } else if (source === 'upload_csv') {
+            templateName = 'upload_csv_form.html';
+        } else if (source === 'database') {
+            templateName = 'database_link_form.html';
+        } else {
+            formContainer.innerHTML = '<div class="error-panel">Error: Invalid source type.</div>';
+            return;
+        }
+        
+        // 3. Simple AJAX call to fetch the form template (This assumes your view logic can return the form template content)
+        // NOTE: In a real Django setup, this would typically involve an AJAX call to a dedicated view 
+        // that renders the form, not fetching the template file directly. 
+        // We'll simulate the update by changing the action attribute for the form based on the source 
+        // or by simply displaying a message if not loaded via Django context.
+        
+        // Since the current context already loads the correct form via Django logic:
+        // We use window.location to trigger a page refresh with the new GET parameter, which
+        // reloads the 'upload_dynamic_view' with the correct form included.
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('source', source);
+        window.location.href = currentUrl.toString();
+
     }
 
-    /**
-     * Handles the static prediction form submission (AJAX).
-     * @param {Event} e 
-     */
-    if (staticForm) {
-        staticForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitButton = staticForm.querySelector('button[type="submit"]');
-            
-            showStatus("Processing static prediction...", 'info');
-            submitButton.disabled = true;
-            submitButton.textContent = "Processing...";
-
-            try {
-                // In a real scenario, we would collect form data here.
-                const response = await fetch('/predict/static/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Include CSRF token if not using @csrf_exempt
-                        'X-CSRFToken': getCookie('csrftoken') 
-                    },
-                    // Send mock data for placeholder
-                    body: JSON.stringify({ mock: true }) 
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showStatus(`Prediction Result: ${data.prediction} (Accuracy: ${data.accuracy})`, 'success');
-                } else {
-                    showStatus(`API Error: ${data.error || 'Server rejected the request.'}`, 'error');
-                }
-
-            } catch (error) {
-                console.error("Fetch error:", error);
-                showStatus("Network Error: Could not connect to the server.", 'error');
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = "Go to Static Analysis";
+    // Function to update button styles
+    function updateTabStyles(activeSource) {
+        tabButtons.forEach(button => {
+            if (button.getAttribute('data-source') === activeSource) {
+                button.classList.remove('inactive-tab-btn');
+                button.classList.add('active-tab-btn');
+            } else {
+                button.classList.remove('active-tab-btn');
+                button.classList.add('inactive-tab-btn');
             }
         });
     }
 
-    /**
-     * Handles the dynamic upload form submission.
-     * Note: This is designed for standard form submission as the process is long-running.
-     * The response will be an HTML page showing the job status.
-     */
-    if (dynamicForm) {
-        dynamicForm.addEventListener('submit', (e) => {
-            // For long-running tasks, we let the form submit normally
-            // but we can show a temporary loading message.
-            const submitButton = dynamicForm.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = "Starting GA Job...";
+    // Event Listeners for Tab Buttons
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const source = this.getAttribute('data-source');
+            loadFormTemplate(source);
         });
-    }
+    });
 
-    /**
-     * Helper function to get the CSRF token from cookies.
-     * @param {string} name 
-     * @returns {string | null}
-     */
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
+    // Initialize the active tab style based on the initial Django context
+    const initialSource = sourceInput.value;
+    if (initialSource) {
+        updateTabStyles(initialSource);
     }
 });
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
