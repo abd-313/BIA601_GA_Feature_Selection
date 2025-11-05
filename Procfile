@@ -1,0 +1,1 @@
+web: gunicorn BIA601_GA_Feature_Selection.wsgi:application
