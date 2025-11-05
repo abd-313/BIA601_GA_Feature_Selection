@@ -5,14 +5,11 @@ import os
 from pathlib import Path
 import sys
 import dj_database_url
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-w&^!s#$m0x1536&b%61v$9+0e58y2!q$78*!k)h03!*h$1&'
 
