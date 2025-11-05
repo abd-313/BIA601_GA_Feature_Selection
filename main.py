@@ -1,5 +1,3 @@
-# main.py
-
 import pandas as pd 
 import numpy as np
 import os
@@ -9,23 +7,22 @@ from pathlib import Path
 from joblib import dump, load  # ADDED: for saving the final model/mask
 from sklearn.linear_model import LogisticRegression # ADDED: for final model training/saving
 
-# Project Imports
+
 from src.data_preprocessing import prepare_data 
 from src.ga_experiment import run_ga
 from src.baseline_models import run_baseline_comparison 
 from src.ga_feature_select.fitness import calculate_fitness 
 
-# Define project root once
 PROJECT_ROOT = Path(__file__).parent
 
-# NEW PATHS: Define paths for the final persistent outputs for Django
+
 BEST_MODEL_PATH = os.path.join(PROJECT_ROOT, 'data', 'best_ga_model.joblib')
 FEATURE_MASK_PATH = os.path.join(PROJECT_ROOT, 'data', 'best_feature_mask.joblib')
 
 
 def run_ga_analysis(data_source: str, ga_params: Dict[str, Any]) -> Dict[str, Any]:
 
-    # 1. Data Preparation
+    # Data Preparation
     try:
         X_train_array, X_test_array, y_train, y_test, feature_names, _ = prepare_data(
             source=data_source, 
@@ -40,7 +37,7 @@ def run_ga_analysis(data_source: str, ga_params: Dict[str, Any]) -> Dict[str, An
     X_train_df = pd.DataFrame(X_train_array, columns=feature_names)
     X_test_df = pd.DataFrame(X_test_array, columns=feature_names)
 
-    # 2. Run Genetic Algorithm (GA)
+    # Run Genetic Algorithm (GA)
     GA_SAVE_PATH = os.path.join(PROJECT_ROOT, "temp_plots")
     os.makedirs(GA_SAVE_PATH, exist_ok=True) 
     
@@ -53,17 +50,16 @@ def run_ga_analysis(data_source: str, ga_params: Dict[str, Any]) -> Dict[str, An
         save_path=GA_SAVE_PATH
     )
 
-    # 3. Final GA Results and Scoring
+    # Final GA Results and Scoring
     n_selected = np.sum(best_mask)
 
-    # Calculate accuracy of the best model (using best_mask)
+    
     _, raw_accuracy = calculate_fitness(
         best_mask, X_train_df, y_train, X_test_df, y_test, 
         ALPHA=1.0, PENALTY_WEIGHT=0.0 # Pure accuracy calculation
     )
     
-    # NEW STEP: Train the final Logistic Regression model using only the selected features
-    # This model will be saved for Django to load instantly.
+
     final_model = LogisticRegression(solver='lbfgs', n_jobs=-1, random_state=42)
     X_train_best = X_train_df.loc[:, best_mask.astype(bool)] # FIXED: Ensure mask is boolean
     
@@ -72,20 +68,20 @@ def run_ga_analysis(data_source: str, ga_params: Dict[str, Any]) -> Dict[str, An
         warnings.simplefilter("ignore")
         final_model.fit(X_train_best, y_train) 
     
-    # 4. Run Baseline Models
+    # Run Baseline Models
     baseline_results = run_baseline_comparison(
         X_train=X_train_df, 
         y_train=y_train, 
         X_test=X_test_df, 
         y_test=y_test,
-        verbose=False # Suppress prints 
+        verbose=False 
     )
     
-    # 5. Structure and Return Results
+    
     summary_df = pd.DataFrame(baseline_results).T[['accuracy', 'f1_weighted']]
     summary_df.index.name = "Model"
     
-    # Convert DataFrame to markdown string for display
+    
     baseline_markdown = summary_df.to_markdown(numalign="left", stralign="left")
     
     results = {

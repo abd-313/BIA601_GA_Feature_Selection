@@ -1,52 +1,9 @@
-# Custom .gitignore file for BIA601_GA_Feature_Selection project
-
-### 1. Python Environment Files ###
-# Byte-compiled / optimized files
 __pycache__/
-*.py[cod]
-*$py.class
-
-# Distribution and packaging
-build/
-dist/
-*.egg-info/
-*.egg
-
-# Package installer logs
-pip-log.txt
-
-### 2. Virtual Environment (VEnv) and Configuration ###
-# Ignore common virtual environment directories
-.venv
-venv/
-env/
-
-# Ignore local environment variable files (e.g., credentials)
+venv
 .env
 .envrc
-
-### 3. Testing, Caching, and Temporary Files ###
-# Ignore testing and code coverage reports
-.coverage
 .cache
-.pytest_cache/
-
-# Ignore Python linting/formatting cache (e.g., Ruff)
-.ruff_cache/
-
-### 4. IDE and Editor Files ###
-# Visual Studio Code local settings (uncomment to ignore)
+.pytest_cache
 .vscode/
-
-# JetBrains/PyCharm project files (uncomment to ignore)
-# .idea/
-
-# ... (Other existing rules)
-
-### 5. Project Specific Outputs and Logs ###
-# Ignore preprocessor saved file
-data/preprocessor.joblib
-
-# Ignore GA results and plots folder
 temp_plots/
 results/

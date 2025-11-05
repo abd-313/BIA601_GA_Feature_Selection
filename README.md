@@ -45,27 +45,50 @@ The system allows users to:
 ```
 C:.
 │   .gitignore
+│   build.sh
 │   db.sqlite3
+│   License
 │   main.py
 │   manage.py
+│   Procfile
 │   README.md
+│   render.yaml
 │   requirements.txt
 │   test_preprocessing_sanity.py
 │
 ├───analysis
 │   │   admin.py
 │   │   apps.py
+│   │   forms.py
 │   │   models.py
 │   │   tests.py
 │   │   urls.py
 │   │   views.py
-│   └───migrations/
+│   │   __init__.py
+│   │
+│   ├───ga_job_results
+│   │   └───repo_default
+│   │           fitness_evolution.png
+│   │           repo_default_summary.json
+│   │
+│   ├───ga_processor
+│   │       ga_processor.py
+│   │       __init__.py
+│   │
+│   ├───migrations
+│   │       __init__.py
+│   │
+│   └───utils
+│           data_loader.py
+│           ga_engine.py
+│           __init__.py
 │
 ├───bia601_project
 │       asgi.py
 │       settings.py
 │       urls.py
 │       wsgi.py
+│       __init__.py
 │
 ├───data
 │       best_feature_mask.joblib
@@ -77,24 +100,30 @@ C:.
 │   │   baseline_models.py
 │   │   data_preprocessing.py
 │   │   ga_experiment.py
+│   │   __init__.py
 │   │
-│   └───ga_feature_select
-│           fitness.py
-│           ga_core.py
-│           operators.py
+│   ├──ga_feature_select
+│      │   fitness.py
+│      │   ga_core.py
+│      │   operators.py
+│      │__ _init__.py
+│                   
 │
 ├───static
 │   ├───css
 │   │       style.css
+│   │
 │   └───js
 │           app.js
 │
-├───templates
-│       home.html
-│       upload_dynamic.html
-│
-└───temp_plots
-        fitness_evolution.png
+└───templates
+        base.html
+        database_link_form.html
+        home.html
+        repository_results.html
+        repository_selection_form.html
+        upload_csv_form.html
+        upload_dynamic.html
 ```
 
 ---
@@ -206,8 +235,8 @@ Below is an example of the GA's fitness evolution across generations:
 
 ## 🌐 Demo
 
-> 🔧 **Deployment Coming Soon**  
-> This section will include a live demo link once deployed. Stay tuned!
+> 🔧 **Deployment Is live for a month from 11/5/2025**  
+> Since the deployment is free, it's only available for a short time; therefore, the localhost option is the best choice afterward.
 
 ---
 

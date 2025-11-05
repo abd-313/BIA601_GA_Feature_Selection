@@ -7,20 +7,20 @@ from django.conf import settings
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 import os
-import joblib         # Required to load the .joblib files
-import base64         # Required to encode the plot image
-import json           # Used for handling best_params dictionary
-import time           # Used for generating a simulated job ID
+import joblib         
+import base64         
+import json           
+import time           
 from io import BytesIO
 from pathlib import Path
-# --- [1] IMPORT REQUIRED FORMS ---
+
 from .forms import UploadCSVForm, DatabaseLinkForm, RepositorySelectionForm 
 from .ga_processor.ga_processor import process_ga_job
 
-# --- Utility Functions ---
+
 GA_JOB_RESULTS_ROOT = Path(__file__).parent / "ga_job_results"
 def load_plot_image(file_path):
-    """Loads a PNG image, encodes it to Base64, and returns a data URI string."""
+    
     if not os.path.exists(file_path):
         return None
     try:
@@ -31,25 +31,28 @@ def load_plot_image(file_path):
         print(f"Error loading plot image {file_path}: {e}")
         return None
 
-# --- View Functions ---
+
 
 def home_view(request):
-    """Displays the main menu of analysis options."""
+    
     
     context = {
         'title': 'Genetic Algorithm Feature Selection Tool'
     }
     return render(request, 'home.html', context)
 
+#Stupid LLMs taking control of most of what we do 
+#and student's not larnign stuff
+#Said by B_A from the team for this project lol
 
 def display_repo_results(request):
-    """Displays the pre-calculated repository results."""
-    # Define directories relative to BASE_DIR (the project root)
+    
+   
     BASE_PROJECT_DIR = settings.BASE_DIR 
     DATA_DIR = os.path.join(BASE_PROJECT_DIR, 'data')
     TEMP_PLOTS_DIR = os.path.join(BASE_PROJECT_DIR, 'temp_plots')
     
-    # Define file paths
+    
     model_path = os.path.join(DATA_DIR, 'best_ga_model.joblib')
     plot_path = os.path.join(TEMP_PLOTS_DIR, 'fitness_evolution.png')
     
@@ -58,16 +61,16 @@ def display_repo_results(request):
     plot_image_data = None
     
     try:
-        # 1. Load Model and Extract Parameters
+        
         if os.path.exists(model_path):
             best_model = joblib.load(model_path)
             
-            # SAFE EXTRACTION: Use scikit-learn's standard get_params() method 
+            
             if hasattr(best_model, 'get_params'):
-                # Extract parameters used to train the model
+               
                 best_params_dict = best_model.get_params(deep=False) 
                 
-                # Exclude internal/technical parameters for cleaner display
+                
                 keys_to_exclude = ['warm_start', 'random_state', 'verbose', 'n_jobs', 'class_weight']
                 clean_params = {k: v for k, v in best_params_dict.items() if k not in keys_to_exclude}
                 best_params_display = json.dumps(clean_params, indent=2)
@@ -97,18 +100,17 @@ def display_repo_results(request):
     return render(request, 'repository_results.html', context)
 
 
-# VIEW: Handles dynamic form display (CSV, Database, Repository Selection)
-# FIX: Guarantees that the 'form' object is created to prevent "Form Context Missing".
+
 def upload_dynamic_view(request, preloaded_form=None, initial_source=None):
-    # 1. Determine the active source from GET parameter or POST failure
+    
     source = request.GET.get('source', 'repository') # Default to repository
     if initial_source:
         source = initial_source # Use source from failed POST request
         
-    # 2. Set context variables for the template
+    
     context = {'title': f'{source.replace("_", " ").title()} Configuration', 'source_type': source}
     
-    # 3. Handle forms
+    
     if source == 'upload_csv':
         form_class = UploadCSVForm
         context['form_template'] = 'upload_csv_form.html'
@@ -119,15 +121,15 @@ def upload_dynamic_view(request, preloaded_form=None, initial_source=None):
         form_class = RepositorySelectionForm
         context['form_template'] = 'repository_selection_form.html'
     else:
-        # Fallback in case of invalid source parameter
+        
         return render(request, 'upload_dynamic.html', {'title': 'Error', 'form_template': None})
 
-    # Load preloaded form (from failed POST) or create a new one
+    
     context['form'] = preloaded_form if preloaded_form else form_class()
     
     return render(request, 'upload_dynamic.html', context)
 
-# VIEW: Handles the form POST submission and redirects to results
+
 def submit_dynamic_job(request):
     """
     Handles POST requests from all dynamic forms, processes data, runs the GA,
@@ -137,35 +139,25 @@ def submit_dynamic_job(request):
         source_type = request.POST.get('source_type')
         job_id = str(uuid.uuid4()) # Generate a unique ID for this job
         
-        # 1. Instantiate the correct form
+        
         if source_type == 'upload_csv':
             form = UploadCSVForm(request.POST, request.FILES)
-        # Add other forms here if needed later
-        # elif source_type == 'database':
-        #     form = DatabaseLinkForm(request.POST) 
-        # elif source_type == 'repository':
-        #     form = RepositorySelectionForm(request.POST) 
         else:
-            # Should not happen if tabs are used correctly
+            
             return redirect('analysis:home_view')
 
-        # 2. Validate the form
+        
         if form.is_valid():
             
-            # --- START: CSV UPLOAD LOGIC ---
             if source_type == 'upload_csv':
-                # Get validated data
+                
                 csv_file = form.cleaned_data['csv_file']
                 target_column = form.cleaned_data['target_column']
                 model_choice = form.cleaned_data['model_choice']
                 
                 try:
-                    # Read the uploaded file (InMemoryUploadedFile) directly into a Pandas DataFrame
-                    # Using encoding='latin1' or 'ISO-8859-1' is sometimes safer for global CSV files
                     df = pd.read_csv(csv_file) 
                     
-                    # 3. Run the Genetic Algorithm (GA) job
-                    # This function executes the entire GA process in the background/foreground.
                     ga_results = process_ga_job(
                         input_data=df, 
                         target_column=target_column, 
@@ -174,14 +166,9 @@ def submit_dynamic_job(request):
                     )
                     
                     if ga_results.get('error'):
-                        # If the GA job fails, attach the error to the form and return
                         print(f"GA Error: {ga_results['message']}")
                         form.add_error(None, f"GA Job failed: {ga_results['message']}")
-                        # We must rely on your 'upload_dynamic_view' to handle rendering the form with errors
                         return upload_dynamic_view(request, preloaded_form=form, initial_source=source_type) 
-                    
-                    # 4. Success: Redirect to the results page using the generated job_id
-                    # Redirect uses the URL name 'repository_results_view'
                     return redirect('analysis:repository_results_view', job_id=job_id)
                 
                 except Exception as e:
@@ -190,15 +177,10 @@ def submit_dynamic_job(request):
                     form.add_error(None, f"Unexpected error during file processing: {e}")
                     return upload_dynamic_view(request, preloaded_form=form, initial_source=source_type)
 
-            # --- END: CSV UPLOAD LOGIC ---
-            
-            # Implement logic for 'database' and 'repository' here later
 
         else:
-            # If form validation fails, redirect back to the dynamic view with the failed form
             return upload_dynamic_view(request, preloaded_form=form, initial_source=source_type)
     
-    # If not a POST request, redirect home
     return redirect('analysis:home_view')
 
 
