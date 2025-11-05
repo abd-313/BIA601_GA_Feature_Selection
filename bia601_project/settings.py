@@ -126,6 +126,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, '..'))
 MEDIA_URL = '/media/ga_jobs/'
 MEDIA_ROOT = BASE_DIR / 'analysis' / 'ga_job_results'
 
+
 ALLOWED_HOSTS = [
     os.environ.get('RAILWAY_STATIC_URL', '127.0.0.1'),
     '0.0.0.0', 
