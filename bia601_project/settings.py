@@ -126,4 +126,12 @@ sys.path.insert(0, os.path.join(BASE_DIR, '..'))
 MEDIA_URL = '/media/ga_jobs/'
 MEDIA_ROOT = BASE_DIR / 'analysis' / 'ga_job_results'
 
-ALLOWED_HOSTS = ['<your-render-subdomain>.onrender.com', '0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = [
+    os.environ.get('RAILWAY_STATIC_URL', '127.0.0.1'),
+    '0.0.0.0', 
+    'localhost', 
+    '127.0.0.1'
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app', 'http://127.0.0.1'] 
