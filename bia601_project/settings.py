@@ -90,7 +90,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bia601_project.wsgi.application'
-
+ROOT_URLCONF = 'bia601_project.urls'
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
